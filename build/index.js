@@ -4,30 +4,16 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
-
-import schema from './schema/index.js';
-
-interface MyContext {
-  token?: string;
-}
-
+import schema from './schema.js';
 const app = express();
 const httpServer = http.createServer(app);
-const server = new ApolloServer<MyContext>({
-  schema: schema,
-  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })]
+const server = new ApolloServer({
+    schema: schema,
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })]
 });
-
 await server.start();
-
-app.use(
-  '/graphql',
-  cors<cors.CorsRequest>(),
-  express.json(),
-  expressMiddleware(server, {
+app.use('/graphql', cors(), express.json(), expressMiddleware(server, {
     context: async ({ req }) => ({ token: req.headers.token })
-  })
-);
-
-await new Promise<void>((resolve) => httpServer.listen({ port: 4000 }, resolve));
+}));
+await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
 console.log(`🚀 Server ready at http://localhost:4000/graphql`);
