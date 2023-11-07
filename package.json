@@ -6,13 +6,18 @@
   "repository": "https://github.com/maximwas/node-oauht2.git",
   "author": "m.vasianin <m.vasianin@viseven.com>",
   "license": "MIT",
+  "type": "module",
   "scripts": {
-    "start": "nodemon",
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
     "build": "tsc",
-    "lint": "eslint src/**/*.ts --fix"
+    "lint": "eslint src/**/*.ts --fix",
+    "prepare": "husky install"
   },
   "dependencies": {
+    "@apollo/server": "^4.9.5",
+    "concurrently": "^8.2.2",
     "express": "^4.18.2",
+    "graphql": "^16.8.1",
     "typescript": "^5.2.2"
   },
   "devDependencies": {
@@ -22,9 +27,16 @@
     "@typescript-eslint/parser": "^6.10.0",
     "eslint": "^8.53.0",
     "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-prettier": "^5.0.1",
+    "husky": "^8.0.3",
     "nodemon": "^3.0.1",
     "prettier": "^3.0.3",
     "ts-node": "^10.9.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint && git add ."
+    }
   }
 }
