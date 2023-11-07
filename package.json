@@ -33,10 +33,5 @@
     "nodemon": "^3.0.1",
     "prettier": "^3.0.3",
     "ts-node": "^10.9.1"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint && git add ."
-    }
   }
 }
