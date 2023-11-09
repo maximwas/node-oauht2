@@ -1,0 +1,35 @@
+# Interface
+interface Response {
+  code: String!
+  success: Boolean!
+  message: String!
+}
+
+# Type
+type User {
+  email: String!
+  password: String!
+}
+
+type Token {
+  token: String
+}
+
+type LoginResponse implements Response {
+  code: String!
+  success: Boolean!
+  message: String!
+  token: Token
+}
+
+# Query
+type Query {
+  user: User
+}
+# Mutation
+type Mutation {
+  login(email: String, password: String): LoginResponse
+  signUp(email: String, password: String): Response
+  logout: Response
+}
+

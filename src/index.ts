@@ -1,13 +1,17 @@
+import 'dotenv/config';
+
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import http from 'http';
-import cors from 'cors';
+import cors, { CorsRequest } from 'cors';
 
+import { connectDB } from './db/index.js';
 import schema from './schema/index.js';
 
-interface MyContext {
+export interface MyContext {
   token?: string;
 }
 
@@ -18,11 +22,16 @@ const server = new ApolloServer<MyContext>({
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })]
 });
 
+await connectDB().catch(console.dir);
 await server.start();
 
+app.use(cookieParser());
 app.use(
   '/graphql',
-  cors<cors.CorsRequest>(),
+  cors<CorsRequest>({
+    origin: 'http://localhost:3000',
+    credentials: true
+  }),
   express.json(),
   expressMiddleware(server, {
     context: async ({ req }) => ({ token: req.headers.token })
